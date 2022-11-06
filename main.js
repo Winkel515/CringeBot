@@ -10,7 +10,7 @@ const client = new Client({
 client.once('ready', () => console.log('Ready!'));
 
 client.on('messageCreate', (message) => {
-  if (message.content.includes('dn')) {
+  if (message.content.toLowerCase().includes('dn')) {
     message.react('🍆');
     message.react('💦');
     return message.reply('deez nuts haha gotem');
