@@ -24,9 +24,11 @@ client.on('messageCreate', (message) => {
     return message.reply("there's no help lmao");
   }
 
-  if(message.author.id == '195278304700399616') {
-    return message.react("🐒")
+  if(message.author.id === '195278304700399616') {
+    return message.react("🐒");
+  }
+  if(message.author.username === 'wugway'){
+    return message.reply('tg simon');
   }
 });
-
 client.login(process.env.TOKEN);
