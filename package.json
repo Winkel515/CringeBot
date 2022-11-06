@@ -18,6 +18,7 @@
   "homepage": "https://github.com/Winkel515/WordCloudBot#readme",
   "dependencies": {
     "discord.js": "^14.6.0",
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.0.3",
+    "pg": "^8.8.0"
   }
 }
