@@ -36,7 +36,7 @@ client.on('messageCreate', async (message) => {
 		addWordToDB(message.content);
 
 	if(message.content.trim().substring(0, '!analysis'.length) === '!analysis') {
-		const split = message.content.split();
+		const split = message.content.split(' ');
 		let limit = 10;
 
 		if(split.length > 1)
@@ -48,7 +48,7 @@ client.on('messageCreate', async (message) => {
 	if (message.content.toLowerCase().includes('dn')) {
 		message.react('🍆');
 		message.react('💦');
-		message.reply('deez nuts haha gotem dn');
+		message.reply('deez nuts haha gotem');
 	}
 
 	if (message.content.trim() === 'test') {
@@ -71,16 +71,13 @@ client.on('messageCreate', async (message) => {
 	}
 
 	if (message.author.username === 'wugway') {
-		message.react('🍆')
+		message.react('🍆');
 	}
 
-	if(message.author.username === 'normalman68') {
-		message.react('🤡');
-	}
 	if(message.content.startsWith('!leetcode')) {
 		const strArr = message.content.split(' ')
 		if (strArr.length <= 1){
-			message.reply('what the fuck bro')
+			message.reply('what the fuck bro');
 		}
 		else{
 			try{
