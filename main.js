@@ -1,4 +1,5 @@
 const { Client, GatewayIntentBits, Emoji } = require('discord.js');
+const axios = require('axios');
 require('dotenv').config();
 
 const { addWordToDB, getWordCount } = require('./database');
@@ -18,7 +19,8 @@ client.on('messageCreate', async (message) => {
 	if(message.author.bot)
 		return
 
-	addWordToDB(message.content);
+	if(message.content.trim().charAt(0) != '!')
+		addWordToDB(message.content);
 
 	if(message.content.trim().substring(0, '!analysis'.length) === '!analysis') {
 		const split = message.content.split();
@@ -33,38 +35,43 @@ client.on('messageCreate', async (message) => {
 	if (message.content.toLowerCase().includes('dn')) {
 		message.react('🍆');
 		message.react('💦');
-		return message.reply('deez nuts haha gotem dn');
+		message.reply('deez nuts haha gotem dn');
 	}
 
 	if (message.content.trim() === 'test') {
-		return message.react('🧐');
+		message.react('🧐');
 	}
 
 	if (
 		message.content.toLowerCase().includes('who') &&
 		message.content.toLowerCase().includes('joe')
 	) {
-		return message.reply('Joe mama haha gotem');
-	}
-
-	if (message.content === '!help') {
-		return message.reply("there's no help lmao");
+		message.reply('Joe mama haha gotem');
 	}
 
 	if (message.author.id === '195278304700399616') {
-		return message.react('🐒');
+		if(message.content.trim() === '!flex') {
+			const res = await axios.get('https://leetcode-stats-api.herokuapp.com/Winkel515');
+			message.reply(`Total Solved: ${res.data.totalSolved}\n` +
+			`\tEasy: ${res.data.easySolved}\n` + 
+			`\tMedium: ${res.data.mediumSolved}\n` +
+			`\tHard: ${res.data.hardSolved}\n` +
+			`Ranking: ${res.data.ranking}`
+			)
+		}
+		message.react('🐒');
 	}
 
 	if (message.author.username === 'saamenerve') {
-		return message.react('🤓');
+		message.react('🤓');
 	}
 
 	if (message.author.username === 'wugway') {
-		return message.reply('tg simon');
+		message.reply('tg simon');
 	}
 
 	if(message.author.username === 'normalman68') {
-		return message.react('🤡');
+		message.react('🤡');
 	}
 });
 
