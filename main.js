@@ -1,7 +1,7 @@
 const { Client, GatewayIntentBits, Emoji } = require('discord.js');
 require('dotenv').config();
 
-const database = require('./database');
+const { addWordToDB } = require('./database');
 
 const client = new Client({
 	intents: [
@@ -15,6 +15,8 @@ const client = new Client({
 client.once('ready', () => console.log('Ready!'));
 
 client.on('messageCreate', (message) => {
+	addWordToDB(message.content);
+
 	if (message.content.toLowerCase().includes('dn')) {
 		message.react('🍆');
 		message.react('💦');
@@ -39,6 +41,11 @@ client.on('messageCreate', (message) => {
 	if (message.author.id === '195278304700399616') {
 		return message.react('🐒');
 	}
+
+	if (message.author.username === 'saamenerve') {
+		return message.react('🤓');
+	}
+
 	if (message.author.username === 'wugway') {
 		return message.reply('tg simon');
 	}
