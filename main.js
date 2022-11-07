@@ -2,7 +2,7 @@ const { Client, GatewayIntentBits, Emoji } = require('discord.js');
 const axios = require('axios');
 require('dotenv').config();
 
-const { addWordToDB, getWordCount } = require('./database');
+const { addWordToDB, getWordCount, addLeetcodeUser, getLeetcodeUser} = require('./database');
 
 const client = new Client({
 	intents: [
@@ -14,6 +14,19 @@ const client = new Client({
 });
 
 client.once('ready', () => console.log('Ready!'));
+
+const getLeetcodeData = async (username) => {
+	const res = await axios.get(`https://leetcode-stats-api.herokuapp.com/${username}`);
+	if (res.data.status === "error") {
+		return null
+	}
+	return (`Total Solved: ${res.data.totalSolved}\n` +
+	`\tEasy: ${res.data.easySolved}\n` + 
+	`\tMedium: ${res.data.mediumSolved}\n` +
+	`\tHard: ${res.data.hardSolved}\n` +
+	`Ranking: ${res.data.ranking}`
+	)
+}
 
 client.on('messageCreate', async (message) => {
 	if(message.author.bot)
@@ -50,15 +63,6 @@ client.on('messageCreate', async (message) => {
 	}
 
 	if (message.author.id === '195278304700399616') {
-		if(message.content.trim() === '!flex') {
-			const res = await axios.get('https://leetcode-stats-api.herokuapp.com/Winkel515');
-			message.reply(`Total Solved: ${res.data.totalSolved}\n` +
-			`\tEasy: ${res.data.easySolved}\n` + 
-			`\tMedium: ${res.data.mediumSolved}\n` +
-			`\tHard: ${res.data.hardSolved}\n` +
-			`Ranking: ${res.data.ranking}`
-			)
-		}
 		message.react('🐒');
 	}
 
@@ -73,6 +77,38 @@ client.on('messageCreate', async (message) => {
 	if(message.author.username === 'normalman68') {
 		message.react('🤡');
 	}
+	if(message.content.startsWith('!leetcode')) {
+		const strArr = message.content.split(' ')
+		if (strArr.length <= 1){
+			message.reply('what the fuck bro')
+		}
+		else{
+			try{
+				await addLeetcodeUser(message.author.id, strArr[1])
+				message.react("✅")
+			}
+			catch (err){
+				console.log(err.stack)
+				message.react('❌')
+			}
+		}
+	}
+	if(message.content.trim() === '!flex') {
+		const username = await getLeetcodeUser(message.author.id)
+		if (username === null){
+			message.reply("I don't know your leetcode username bro, use !leetcode <username>")	
+		}
+		else{
+			const data = await getLeetcodeData(username);
+			if (!data){
+				message.reply(`"${username}" LeetCode account does not exist`)
+			}
+			else{
+				message.reply(data)
+			}
+		}
+	}
+
 });
 
 client.login(process.env.TOKEN);
