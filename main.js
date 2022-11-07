@@ -1,7 +1,7 @@
 const { Client, GatewayIntentBits, Emoji } = require('discord.js');
 require('dotenv').config();
 
-const { addWordToDB } = require('./database');
+const { addWordToDB, getWordCount } = require('./database');
 
 const client = new Client({
 	intents: [
@@ -14,13 +14,26 @@ const client = new Client({
 
 client.once('ready', () => console.log('Ready!'));
 
-client.on('messageCreate', (message) => {
+client.on('messageCreate', async (message) => {
+	if(message.author.bot)
+		return
+
 	addWordToDB(message.content);
+
+	if(message.content.trim().substring(0, '!analysis'.length) === '!analysis') {
+		const split = message.content.split();
+		let limit = 10;
+
+		if(split.length > 1)
+			limit = parseInt(split[1]);
+
+		message.reply(await getWordCount(limit));
+	}
 
 	if (message.content.toLowerCase().includes('dn')) {
 		message.react('🍆');
 		message.react('💦');
-		return message.reply('deez nuts haha gotem');
+		return message.reply('deez nuts haha gotem dn');
 	}
 
 	if (message.content.trim() === 'test') {
@@ -48,6 +61,10 @@ client.on('messageCreate', (message) => {
 
 	if (message.author.username === 'wugway') {
 		return message.reply('tg simon');
+	}
+
+	if(message.author.username === 'normalman68') {
+		return message.react('🤡');
 	}
 });
 
