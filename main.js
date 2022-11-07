@@ -71,7 +71,7 @@ client.on('messageCreate', async (message) => {
 	}
 
 	if (message.author.username === 'wugway') {
-		message.reply('tg simon');
+		message.react('🍆')
 	}
 
 	if(message.author.username === 'normalman68') {
