@@ -4,31 +4,44 @@ require('dotenv').config();
 const database = require('./database');
 
 const client = new Client({
-  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers],
+	intents: [
+		GatewayIntentBits.Guilds,
+		GatewayIntentBits.GuildMessages,
+		GatewayIntentBits.MessageContent,
+		GatewayIntentBits.GuildMembers,
+	],
 });
 
 client.once('ready', () => console.log('Ready!'));
 
 client.on('messageCreate', (message) => {
-  if (message.content.toLowerCase().includes('dn')) {
-    message.react('🍆');
-    message.react('💦');
-    return message.reply('deez nuts haha gotem');
-  }
+	if (message.content.toLowerCase().includes('dn')) {
+		message.react('🍆');
+		message.react('💦');
+		return message.reply('deez nuts haha gotem');
+	}
 
-  if(message.content.toLowerCase().includes('who') && message.content.toLowerCase().includes('joe')) {
-    return message.reply('Joe mama haha gotem');
-  }
+	if (message.content.trim() === 'test') {
+		return message.react('🧐');
+	}
 
-  if (message.content === '!help') {
-    return message.reply("there's no help lmao");
-  }
+	if (
+		message.content.toLowerCase().includes('who') &&
+		message.content.toLowerCase().includes('joe')
+	) {
+		return message.reply('Joe mama haha gotem');
+	}
 
-  if(message.author.id === '195278304700399616') {
-    return message.react("🐒");
-  }
-  if(message.author.username === 'wugway'){
-    return message.reply('tg simon');
-  }
+	if (message.content === '!help') {
+		return message.reply("there's no help lmao");
+	}
+
+	if (message.author.id === '195278304700399616') {
+		return message.react('🐒');
+	}
+	if (message.author.username === 'wugway') {
+		return message.reply('tg simon');
+	}
 });
+
 client.login(process.env.TOKEN);
