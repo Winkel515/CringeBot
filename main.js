@@ -80,7 +80,7 @@ client.on('messageCreate', async (message) => {
 	if(message.content.startsWith('!leetcode')) {
 		const strArr = message.content.split(' ')
 		if (strArr.length <= 1){
-			message.reply('what the fuck bro')
+			message.reply('what the fuck bro where username')
 		}
 		else{
 			try{
