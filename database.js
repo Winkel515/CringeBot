@@ -11,31 +11,34 @@ client.connect(function (err) {
 });
 
 const addWordToDB = async (input) => {
-	const strArr = input.toLowerCase().split(' ')
+	const strArr = input
+		.toLowerCase()
+		.split(' ')
 		.map((str) => {
 			return str.replace(/^[^A-Za-z0-9]+|[^A-Za-z0-9]+$/g, '');
 		})
-		.filter(str => str.length != 0);
+		.filter((str) => str.length != 0);
 
 	const strCount = {};
 
-	for(const str of strArr) {
-		if(strCount[str] === undefined) {
+	for (const str of strArr) {
+		if (strCount[str] === undefined) {
 			strCount[str] = 1;
 		} else {
 			strCount[str]++;
 		}
 	}
 
-	for(const [str, count] of Object.entries(strCount)) {
+	for (const [str, count] of Object.entries(strCount)) {
 		const selectQuery = 'SELECT word, frequency FROM words WHERE word = $1';
 		const selectValues = [str];
 
 		try {
 			const res = await client.query(selectQuery, selectValues);
 
-			if(res.rowCount === 0) {
-				const insertQuery = 'INSERT INTO words (word, frequency) VALUES ($1, $2)';
+			if (res.rowCount === 0) {
+				const insertQuery =
+					'INSERT INTO words (word, frequency) VALUES ($1, $2)';
 				const insertValues = [str, count];
 				client.query(insertQuery, insertValues);
 			} else {
@@ -50,47 +53,55 @@ const addWordToDB = async (input) => {
 };
 
 const getWordCount = async (limit) => {
-	const selectQuery = 'SELECT word, frequency FROM words ORDER BY frequency DESC LIMIT $1';
-	const selectValues = [Math.min(30, limit)];
+	const selectQuery =
+		'SELECT word, frequency FROM words ORDER BY frequency DESC LIMIT $1';
+	const selectValues = [Math.min(50, limit)];
 	const res = await client.query(selectQuery, selectValues);
 
-	let str = "";
+	let str = '';
 
-	for(const row of res.rows)
-		str += `${row.word}: ${row.frequency}\n`;
+	for (const [index, row] of res.rows.entries())
+		str += `${index + 1}. ${row.word}: ${row.frequency}\n`;
 
 	return str;
-}
+};
 
-const addLeetcodeUser = async (discordId, username) =>{
-	const selectQuery = 'SELECT discord_id, username FROM leetcode WHERE discord_id = $1'
-	const selectValues = [discordId]
+const addLeetcodeUser = async (discordId, username) => {
+	const selectQuery =
+		'SELECT discord_id, username FROM leetcode WHERE discord_id = $1';
+	const selectValues = [discordId];
 	try {
-		const res = await client.query(selectQuery,selectValues)
-		if(res.rowCount === 0) {
-			const insertQuery = 'INSERT INTO leetcode (discord_id, username) VALUES ($1, $2)';
+		const res = await client.query(selectQuery, selectValues);
+		if (res.rowCount === 0) {
+			const insertQuery =
+				'INSERT INTO leetcode (discord_id, username) VALUES ($1, $2)';
 			const insertValues = [discordId, username];
 			client.query(insertQuery, insertValues);
 		} else {
-			const updateQuery = 'UPDATE leetcode SET username = $1 WHERE discord_id = $2';
+			const updateQuery =
+				'UPDATE leetcode SET username = $1 WHERE discord_id = $2';
 			const updateValues = [username, discordId];
 			client.query(updateQuery, updateValues);
 		}
 	} catch (err) {
 		console.log(err.stack);
 	}
-}
+};
 
 const getLeetcodeUser = async (discordId) => {
-	const selectQuery = 'SELECT username FROM leetcode WHERE discord_id = $1'
-	const selectValues = [discordId]
-	const res = await client.query(selectQuery,selectValues)
-	if (res.rowCount === 0){
-		return null 
+	const selectQuery = 'SELECT username FROM leetcode WHERE discord_id = $1';
+	const selectValues = [discordId];
+	const res = await client.query(selectQuery, selectValues);
+	if (res.rowCount === 0) {
+		return null;
+	} else {
+		return res.rows[0].username;
 	}
-	else{
-		return res.rows[0].username
-	}
-}
+};
 
-module.exports = {addWordToDB, getWordCount, addLeetcodeUser, getLeetcodeUser};
+module.exports = {
+	addWordToDB,
+	getWordCount,
+	addLeetcodeUser,
+	getLeetcodeUser,
+};
