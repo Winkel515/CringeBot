@@ -118,7 +118,10 @@ client.on('messageCreate', async (message) => {
 		);
 	}
 	if (message.content === '!roast') {
-		message.reply(await getRoast());
+		const roast = await getRoast()
+		if (roast){
+			message.reply(roast)
+		}
 	}
 });
 

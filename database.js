@@ -103,11 +103,17 @@ const getLeetcodeUser = async (discordId) => {
 const getRoast = async () => {
 	const selectQuery = 'SELECT roast FROM roasts ORDER BY RANDOM() LIMIT 1';
 	const res = await client.query(selectQuery);
-	if (res.rowCount === 0) {
-		return null;
+	try{
+		if (res.rowCount === 0) {
+			return null;
+		}
+		else{
+			return res.rows[0].roast;
+		}
 	}
-	else{
-		return res.rows[0].roast;
+	catch (err) {
+		console.log(err.stack)
+		return null
 	}
 }
 module.exports = {
