@@ -94,14 +94,26 @@ const getLeetcodeUser = async (discordId) => {
 	const res = await client.query(selectQuery, selectValues);
 	if (res.rowCount === 0) {
 		return null;
-	} else {
+	}
+	else {
 		return res.rows[0].username;
 	}
 };
 
+const getRoast = async () => {
+	const selectQuery = 'SELECT roast FROM roasts ORDER BY RANDOM() LIMIT 1';
+	const res = await client.query(selectQuery);
+	if (res.rowCount === 0) {
+		return null;
+	}
+	else{
+		return res.rows[0].roast;
+	}
+}
 module.exports = {
 	addWordToDB,
 	getWordCount,
 	addLeetcodeUser,
 	getLeetcodeUser,
+	getRoast,
 };

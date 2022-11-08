@@ -7,6 +7,7 @@ const {
 	getWordCount,
 	addLeetcodeUser,
 	getLeetcodeUser,
+	getRoast,
 } = require('./database');
 
 const client = new Client({
@@ -115,6 +116,9 @@ client.on('messageCreate', async (message) => {
 				timeZone: 'America/New_York',
 			})
 		);
+	}
+	if (message.content === '!roast') {
+		message.reply(await getRoast());
 	}
 });
 
