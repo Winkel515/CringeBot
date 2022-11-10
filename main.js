@@ -117,10 +117,14 @@ client.on('messageCreate', async (message) => {
 			})
 		);
 	}
-	if (message.content === '!roast') {
+	if (message.content.startsWith('!roast')) {
 		const roast = await getRoast()
-		if (roast){
+		if (message.content.trim() === '!roast'){
 			message.reply(roast)
+		}
+		else{
+			const target = message.content.split(' ')[1]
+			message.reply(`${target}, ${roast}`)
 		}
 	}
 });
