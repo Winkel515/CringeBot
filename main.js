@@ -80,6 +80,10 @@ client.on('messageCreate', async (message) => {
     message.react('🍆');
   }
 
+  if (message.author.username === 'gator') {
+    message.react('🐊');
+  }
+
   if (message.content.startsWith('!leetcode')) {
     const strArr = message.content.split(' ');
     if (strArr.length <= 1) {
