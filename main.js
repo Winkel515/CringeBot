@@ -123,13 +123,13 @@ client.on('messageCreate', async (message) => {
   }
 
   if (message.content === '!weather') {
-    const start = new Date('2022', '10', '11');
+    const start = new Date(2022, 10, 11, 17);
     const today = Date.now();
 
-    const dif = Math.floor((today - start.getTime()) / (1000 * 3600 * 24)); // # days
+    const dif = Math.floor((today - start.getTime()) / (1000 * 3600)); // # hours
 
     message.reply(
-      `We have been waiting ${dif} day${
+      `We have been waiting ${dif} hour${
         dif <= 1 ? '' : 's'
       } for <@576880753200070666> to implement this feature 😠`
     );
