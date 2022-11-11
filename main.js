@@ -123,7 +123,7 @@ client.on('messageCreate', async (message) => {
   }
 
   if (message.content === '!weather') {
-    const start = new Date(2022, 10, 11, 17);
+    const start = new Date(Date.UTC(2022, 10, 11, 22));
     const today = Date.now();
 
     const dif = Math.floor((today - start.getTime()) / (1000 * 3600)); // # hours
