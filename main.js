@@ -121,12 +121,27 @@ client.on('messageCreate', async (message) => {
       })
     );
   }
+
+  if (message.content === '!weather') {
+    const start = new Date('2022', '10', '11');
+    const today = Date.now();
+
+    const dif = Math.floor((today - start.getTime()) / (1000 * 3600 * 24)); // # days
+
+    message.reply(
+      `We have been waiting ${dif} day${
+        dif <= 1 ? '' : 's'
+      } for <@576880753200070666> to implement this feature 😠`
+    );
+  }
+
   if (message.content.startsWith('!roast')) {
     const roast = await getRoast();
     if (message.content.trim() === '!roast') {
       message.channel.send(roast);
     } else {
       const target = message.content.split(' ')[1];
+      console.log(target);
       message.channel.send(`${target}, ${roast}`);
     }
   }
