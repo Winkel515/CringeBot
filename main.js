@@ -161,6 +161,10 @@ client.on('messageCreate', async (message) => {
       message.channel.send(`${target}, ${roast}`);
     }
   }
+
+  if (message.content == '!secret'){
+    message.channel.send('tg simon')
+  }
 });
 
 client.login(process.env.TOKEN);
