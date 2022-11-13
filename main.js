@@ -1,4 +1,9 @@
-const { Client, GatewayIntentBits, Emoji,EmbedBuilder} = require('discord.js');
+const {
+  Client,
+  GatewayIntentBits,
+  Emoji,
+  EmbedBuilder,
+} = require('discord.js');
 const axios = require('axios');
 require('dotenv').config();
 
@@ -22,18 +27,19 @@ const client = new Client({
 client.once('ready', () => console.log('Ready!'));
 
 const helpEmbed = new EmbedBuilder()
-	.setTitle(
-		'Cringe Bot'
-	)
-	.addFields(
-		{ name: '!help', value: 'Display this page'},
-		{ name: '!roast <username>', value: 'Get roasted/Roast someone'},
-		{ name: '!leetcode <username>', value: 'Assign LeetCode username to your discord'},
-		{ name: '!flex', value: 'Show LeetCode stats'},
-		{ name: '!weather', value: 'Display current weather'},
-		{ name: '!pointless', value: 'idk, some pointless stuff'},
-	)
-	.setTimestamp()
+  .setTitle('Cringe Bot')
+  .addFields(
+    { name: '!help', value: 'Display this page' },
+    { name: '!roast <username>', value: 'Get roasted/Roast someone' },
+    {
+      name: '!leetcode <username>',
+      value: 'Assign LeetCode username to your discord',
+    },
+    { name: '!flex', value: 'Show LeetCode stats' },
+    { name: '!weather', value: 'Display current weather' },
+    { name: '!pointless', value: 'idk, some pointless stuff' }
+  )
+  .setTimestamp();
 
 const getLeetcodeData = async (username) => {
   const res = await axios.get(
@@ -64,8 +70,8 @@ client.on('messageCreate', async (message) => {
 
     message.reply(await getWordCount(limit));
   }
-  if (message.content === '!help'){
-	message.channel.send({ embeds: [helpEmbed] });
+  if (message.content === '!help') {
+    message.channel.send({ embeds: [helpEmbed] });
   }
   if (message.content.toLowerCase().includes('dn')) {
     message.react('🍆');
@@ -162,8 +168,8 @@ client.on('messageCreate', async (message) => {
     }
   }
 
-  if (message.content == '!secret'){
-    message.channel.send('tg simon')
+  if (message.content == '!secret') {
+    message.channel.send('tg simon');
   }
 });
 
