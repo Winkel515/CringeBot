@@ -1,6 +1,6 @@
 import { Client, GatewayIntentBits, EmbedBuilder } from 'discord.js';
 import dotenv from 'dotenv';
-import { addWordToDB, getWordCount } from './database';
+import { addWordToDB } from './database';
 import { useCommand } from './commands';
 
 dotenv.config();
@@ -14,12 +14,12 @@ const client = new Client({
   ],
 });
 
-client.once('ready', () => console.log('Ready!'));
+client.once('ready', () => console.log('CringeBot is ready!'));
 
 client.on('messageCreate', async (message) => {
   if (message.author.bot) return;
 
-  if (message.content.trim().charAt(0) != '!') addWordToDB(message.content);
+  addWordToDB(message.content);
 
   useCommand(message);
 
@@ -44,15 +44,15 @@ client.on('messageCreate', async (message) => {
     message.react('🐒');
   }
 
-  if (message.author.username === 'saamenerve') {
+  if (message.author.id === '294616941870710784') {
     message.react('🤓');
   }
 
-  if (message.author.username === 'wugway') {
+  if (message.author.id === '576880753200070666') {
     message.react('🍆');
   }
 
-  if (message.author.username === 'gator') {
+  if (message.author.id === '706649359600713750') {
     message.react('🐊');
   }
 });
