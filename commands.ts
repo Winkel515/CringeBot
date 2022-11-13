@@ -1,7 +1,12 @@
 import { EmbedBuilder, Message, MessageMentions } from 'discord.js';
 import axios from 'axios';
 
-import { addLeetcodeUser, getLeetcodeUser, getRoast } from './database';
+import {
+  addLeetcodeUser,
+  getLeetcodeUser,
+  getRoast,
+  getWordCount,
+} from './database';
 
 type Commands = {
   [key: string]: (message: Message, param: string) => Promise<void> | void;
@@ -15,6 +20,7 @@ const commands: Commands = {
   roast,
   secret,
   flex,
+  analysis,
 };
 
 function useCommand(message: Message) {
@@ -138,6 +144,12 @@ async function flex(message: Message, param: string) {
       message.reply(data);
     }
   }
+}
+
+async function analysis(message: Message, param: string) {
+  let limit = 10; // default of 10
+  if (param && !isNaN(param as any)) limit = parseInt(param);
+  message.reply(await getWordCount(limit));
 }
 
 export { useCommand };

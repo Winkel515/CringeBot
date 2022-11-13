@@ -21,15 +21,6 @@ client.on('messageCreate', async (message) => {
 
   if (message.content.trim().charAt(0) != '!') addWordToDB(message.content);
 
-  if (message.content.trim().substring(0, '!analysis'.length) === '!analysis') {
-    const split = message.content.split(' ');
-    let limit = 10;
-
-    if (split.length > 1 && !isNaN(split[1] as any)) limit = parseInt(split[1]);
-
-    message.reply(await getWordCount(limit));
-  }
-
   useCommand(message);
 
   if (message.content.toLowerCase().includes('dn')) {
