@@ -10,7 +10,7 @@ client.connect(function (err) {
   console.log('Connected to Postgres DB.');
 });
 
-const addWordToDB = async (input) => {
+const addWordToDB = async (input: string) => {
   const strArr = input
     .toLowerCase()
     .split(' ')
@@ -19,7 +19,11 @@ const addWordToDB = async (input) => {
     })
     .filter((str) => str.length != 0);
 
-  const strCount = {};
+  type StrCount = {
+    [key: string]: number;
+  };
+
+  const strCount: StrCount = {};
 
   for (const str of strArr) {
     if (strCount[str] === undefined) {
@@ -52,7 +56,7 @@ const addWordToDB = async (input) => {
   }
 };
 
-const getWordCount = async (limit) => {
+const getWordCount = async (limit: number) => {
   const selectQuery =
     'SELECT word, frequency FROM words ORDER BY frequency DESC LIMIT $1';
   const selectValues = [Math.min(50, limit)];
@@ -66,7 +70,7 @@ const getWordCount = async (limit) => {
   return str;
 };
 
-const addLeetcodeUser = async (discordId, username) => {
+const addLeetcodeUser = async (discordId: string, username: string) => {
   const selectQuery =
     'SELECT discord_id, username FROM leetcode WHERE discord_id = $1';
   const selectValues = [discordId];
@@ -88,7 +92,7 @@ const addLeetcodeUser = async (discordId, username) => {
   }
 };
 
-const getLeetcodeUser = async (discordId) => {
+const getLeetcodeUser = async (discordId: string) => {
   const selectQuery = 'SELECT username FROM leetcode WHERE discord_id = $1';
   const selectValues = [discordId];
   const res = await client.query(selectQuery, selectValues);
