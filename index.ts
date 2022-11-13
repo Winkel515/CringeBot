@@ -1,13 +1,6 @@
-import { Client, GatewayIntentBits, Emoji, EmbedBuilder } from 'discord.js';
-import axios from 'axios';
+import { Client, GatewayIntentBits, EmbedBuilder } from 'discord.js';
 import dotenv from 'dotenv';
-import {
-  addWordToDB,
-  getWordCount,
-  addLeetcodeUser,
-  getLeetcodeUser,
-  getRoast,
-} from './database';
+import { addWordToDB, getWordCount } from './database';
 import { useCommand } from './commands';
 
 dotenv.config();

@@ -1,13 +1,7 @@
 import { EmbedBuilder, Message, MessageMentions } from 'discord.js';
 import axios from 'axios';
 
-import {
-  addWordToDB,
-  getWordCount,
-  addLeetcodeUser,
-  getLeetcodeUser,
-  getRoast,
-} from './database';
+import { addLeetcodeUser, getLeetcodeUser, getRoast } from './database';
 
 type Commands = {
   [key: string]: (message: Message, param: string) => Promise<void> | void;
