@@ -1,19 +1,16 @@
-const {
-  Client,
-  GatewayIntentBits,
-  Emoji,
-  EmbedBuilder,
-} = require('discord.js');
-const axios = require('axios');
-require('dotenv').config();
+import { Client, GatewayIntentBits, Emoji, EmbedBuilder } from 'discord.js';
+import axios from 'axios';
+import dotenv from 'dotenv';
 
-const {
+dotenv.config();
+
+import {
   addWordToDB,
   getWordCount,
   addLeetcodeUser,
   getLeetcodeUser,
   getRoast,
-} = require('./database');
+} from './database';
 
 const client = new Client({
   intents: [
@@ -66,7 +63,7 @@ client.on('messageCreate', async (message) => {
     const split = message.content.split(' ');
     let limit = 10;
 
-    if (split.length > 1 && !isNaN(split[1])) limit = parseInt(split[1]);
+    if (split.length > 1 && !isNaN(split[1] as any)) limit = parseInt(split[1]);
 
     message.reply(await getWordCount(limit));
   }
