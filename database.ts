@@ -118,10 +118,50 @@ const getRoast = async () => {
   }
 };
 
+const getDeezNutsCount = async (discordId: string) => {
+  const selectQuery = 'SELECT count FROM dn_counts WHERE discord_id = $1';
+  const selectValues = [discordId];
+  const res = await client.query(selectQuery,selectValues);
+  try{
+    if (res.rowCount === 0){
+      return '0'
+    }
+    else{
+      return res.rows[0].count
+    }
+  }
+  catch(err){
+    console.log(err.stack)
+  }
+}
+
+const addDeezNutsCount = async (discordId: string) => {
+  const selectQuery = 'SELECT count FROM dn_counts WHERE discord_id = $1';
+  const selectValues = [discordId];
+  const res = await client.query(selectQuery,selectValues);
+  try{
+    if (res.rowCount === 0){
+      const insertQuery = 'INSERT INTO dn_counts (discord_id, count) VALUES ($1, $2)';
+      const insertValues = [discordId, 1];
+      client.query(insertQuery,insertValues);
+    }
+    else{
+      const updateQuery = 'UPDATE dn_counts SET count = $2 WHERE discord_id = $1';
+      const updateValues = [discordId, parseInt(res.rows[0].count) + 1];
+      client.query(updateQuery,updateValues);
+    }
+  }
+  catch (err){
+    console.log(err.stack);
+    return
+  }
+}
 export {
   addWordToDB,
   getWordCount,
   addLeetcodeUser,
   getLeetcodeUser,
   getRoast,
+  addDeezNutsCount,
+  getDeezNutsCount,
 };

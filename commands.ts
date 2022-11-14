@@ -6,6 +6,7 @@ import {
   getLeetcodeUser,
   getRoast,
   getWordCount,
+  getDeezNutsCount,
 } from './database';
 
 type Commands = {
@@ -21,6 +22,7 @@ const commands: Commands = {
   secret,
   flex,
   analysis,
+  nutcount,
 };
 
 function useCommand(message: Message) {
@@ -163,6 +165,16 @@ async function analysis(message: Message, param: string) {
   let limit = 10; // default of 10
   if (param && !isNaN(param as any)) limit = parseInt(param);
   message.reply(await getWordCount(limit));
+}
+
+async function nutcount(message: Message, param: string){
+  if (param){
+    const id = param.substring(2,param.length - 1)
+    message.reply('deez nuts count: ' + await getDeezNutsCount(id))
+  }
+  else{
+    message.reply('deez nuts count: ' + await getDeezNutsCount(message.author.id))
+  }
 }
 
 export { useCommand };

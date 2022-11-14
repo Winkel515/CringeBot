@@ -1,6 +1,6 @@
 import { Client, GatewayIntentBits, EmbedBuilder } from 'discord.js';
 import dotenv from 'dotenv';
-import { addWordToDB } from './database';
+import { addWordToDB,addDeezNutsCount, getDeezNutsCount} from './database';
 import { useCommand } from './commands';
 
 dotenv.config();
@@ -26,7 +26,8 @@ client.on('messageCreate', async (message) => {
   if (message.content.toLowerCase().includes('dn')) {
     message.react('🍆');
     message.react('💦');
-    message.reply('deez nuts haha gotem');
+    await addDeezNutsCount(message.author.id)
+    message.reply('deez nuts haha gotem\ndeez nuts count: ' + await getDeezNutsCount(message.author.id));
   }
 
   if (message.content.trim() === 'test') {
