@@ -97,17 +97,30 @@ function pointless(message: Message, param: string) {
   );
 }
 
-function weather(message: Message, param: string) {
-  const start = new Date(Date.UTC(2022, 10, 11, 22));
-  const today = Date.now();
+async function weather(message: Message, param: string) {
 
-  const dif = Math.floor((today - start.getTime()) / (1000 * 3600)); // # hours
+  if (!param) {
+    param = 'brossard'
+  }
 
-  message.reply(
-    `We have been waiting ${dif} hour${
-      dif <= 1 ? '' : 's'
-    } for <@576880753200070666> to implement this feature 😠`
-  );
+  try {
+    
+    const weatherData = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${param}&appid=64206d65bc341529c8fea8f9158d50d4&units=metric`);
+
+    console.log(weatherData)
+
+    const currentTemp = weatherData.data.main.temp;
+
+    const nameOfCity = weatherData.data.name;
+
+    message.reply(
+      `It is currently ${currentTemp} \u00B0C in ${nameOfCity}`      
+    )
+
+  } catch (err) {
+    console.log(err)
+    message.reply('write the city name correctly')
+  }
 }
 
 async function roast(message: Message, param: string) {
