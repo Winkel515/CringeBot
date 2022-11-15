@@ -1,6 +1,7 @@
 # CringeBot
 <h2>Discord bot for fun</h2>
 
+<code>!help</code> to display all availible commands
 <code>!flex</code> to display Leetcode stats
 <br/>
 <br/>
