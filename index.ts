@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits, EmbedBuilder } from 'discord.js';
+import { Client, GatewayIntentBits, EmbedBuilder, Message } from 'discord.js';
 import dotenv from 'dotenv';
 import {
   addWordToDB,
@@ -28,16 +28,7 @@ client.on('messageCreate', async (message) => {
 
   useCommand(message);
 
-  const num = Number(message.content);
-  if (Number.isInteger(num) && num > 0) {
-    const isNextNum = await handleCount(num);
-    message.react(isNextNum ? '✅' : '❌');
-    if (!isNextNum)
-      message.channel.send(
-        `${message.author} can't count... Restarting count 😠\n` +
-          "I'd recommend you read this: <https://www.wikihow.com/Count-to-One-Hundred>"
-      );
-  }
+  countingGame(message);
 
   if (message.content.toLowerCase().includes('dn')) {
     message.react('🍆');
@@ -76,5 +67,18 @@ client.on('messageCreate', async (message) => {
     message.react('🐊');
   }
 });
+
+const countingGame = async (message: Message) => {
+  const num = Number(message.content);
+  if (Number.isInteger(num) && num > 0) {
+    const isNextNum = await handleCount(num);
+    message.react(isNextNum ? '✅' : '❌');
+    if (!isNextNum)
+      message.channel.send(
+        `${message.author} can't count... Restarting count 😠\n` +
+          "I'd recommend you read this: <https://www.wikihow.com/Count-to-One-Hundred>"
+      );
+  }
+};
 
 client.login(process.env.TOKEN);
