@@ -100,28 +100,17 @@ function pointless(message: Message, param: string) {
 }
 
 async function weather(message: Message, param: string) {
-
-  if (!param) {
-    param = 'brossard'
-  }
+  if (!param) param = 'brossard';
 
   try {
-    
-    const weatherData = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${param}&appid=64206d65bc341529c8fea8f9158d50d4&units=metric`);
-
-    console.log(weatherData)
-
+    const weatherData = await axios.get(
+      `https://api.openweathermap.org/data/2.5/weather?q=${param}&appid=64206d65bc341529c8fea8f9158d50d4&units=metric`
+    );
     const currentTemp = weatherData.data.main.temp;
-
     const nameOfCity = weatherData.data.name;
-
-    message.reply(
-      `It is currently ${currentTemp} \u00B0C in ${nameOfCity}`      
-    )
-
+    message.reply(`It is currently ${currentTemp} \u00B0C in ${nameOfCity}`);
   } catch (err) {
-    console.log(err)
-    message.reply('write the city name correctly')
+    message.reply('write the city name correctly');
   }
 }
 
@@ -167,13 +156,14 @@ async function analysis(message: Message, param: string) {
   message.reply(await getWordCount(limit));
 }
 
-async function nutcount(message: Message, param: string){
-  if (param){
-    const id = param.substring(2,param.length - 1)
-    message.reply('deez nuts count: ' + await getDeezNutsCount(id))
-  }
-  else{
-    message.reply('deez nuts count: ' + await getDeezNutsCount(message.author.id))
+async function nutcount(message: Message, param: string) {
+  if (param) {
+    const id = param.substring(2, param.length - 1);
+    message.reply('deez nuts count: ' + (await getDeezNutsCount(id)));
+  } else {
+    message.reply(
+      'deez nuts count: ' + (await getDeezNutsCount(message.author.id))
+    );
   }
 }
 

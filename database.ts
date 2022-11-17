@@ -121,41 +121,49 @@ const getRoast = async () => {
 const getDeezNutsCount = async (discordId: string) => {
   const selectQuery = 'SELECT count FROM dn_counts WHERE discord_id = $1';
   const selectValues = [discordId];
-  const res = await client.query(selectQuery,selectValues);
-  try{
-    if (res.rowCount === 0){
-      return '0'
+  const res = await client.query(selectQuery, selectValues);
+  try {
+    if (res.rowCount === 0) {
+      return '0';
+    } else {
+      return res.rows[0].count;
     }
-    else{
-      return res.rows[0].count
-    }
+  } catch (err) {
+    console.log(err.stack);
   }
-  catch(err){
-    console.log(err.stack)
-  }
-}
+};
 
 const addDeezNutsCount = async (discordId: string) => {
   const selectQuery = 'SELECT count FROM dn_counts WHERE discord_id = $1';
   const selectValues = [discordId];
-  const res = await client.query(selectQuery,selectValues);
-  try{
-    if (res.rowCount === 0){
-      const insertQuery = 'INSERT INTO dn_counts (discord_id, count) VALUES ($1, $2)';
+  const res = await client.query(selectQuery, selectValues);
+  try {
+    if (res.rowCount === 0) {
+      const insertQuery =
+        'INSERT INTO dn_counts (discord_id, count) VALUES ($1, $2)';
       const insertValues = [discordId, 1];
-      client.query(insertQuery,insertValues);
-    }
-    else{
-      const updateQuery = 'UPDATE dn_counts SET count = $2 WHERE discord_id = $1';
+      client.query(insertQuery, insertValues);
+    } else {
+      const updateQuery =
+        'UPDATE dn_counts SET count = $2 WHERE discord_id = $1';
       const updateValues = [discordId, parseInt(res.rows[0].count) + 1];
-      client.query(updateQuery,updateValues);
+      client.query(updateQuery, updateValues);
     }
-  }
-  catch (err){
+  } catch (err) {
     console.log(err.stack);
-    return
+    return;
   }
-}
+};
+const handleCount = async (num: number): Promise<boolean> => {
+  const selectQuery = "SELECT value FROM count WHERE lock = 'X'";
+  const res = await client.query(selectQuery);
+  const isNextNum = num === res.rows[0].value + 1;
+  const updateQuery = "UPDATE count SET value = $1 WHERE lock = 'X'";
+  const updateValues = isNextNum ? [num] : [0];
+  client.query(updateQuery, updateValues);
+  return isNextNum;
+};
+
 export {
   addWordToDB,
   getWordCount,
@@ -164,4 +172,5 @@ export {
   getRoast,
   addDeezNutsCount,
   getDeezNutsCount,
+  handleCount,
 };

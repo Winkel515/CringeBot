@@ -1,6 +1,11 @@
 import { Client, GatewayIntentBits, EmbedBuilder } from 'discord.js';
 import dotenv from 'dotenv';
-import { addWordToDB,addDeezNutsCount, getDeezNutsCount} from './database';
+import {
+  addWordToDB,
+  addDeezNutsCount,
+  getDeezNutsCount,
+  handleCount,
+} from './database';
 import { useCommand } from './commands';
 
 dotenv.config();
@@ -23,11 +28,25 @@ client.on('messageCreate', async (message) => {
 
   useCommand(message);
 
+  const num = Number(message.content);
+  if (Number.isInteger(num) && num > 0) {
+    const isNextNum = await handleCount(num);
+    message.react(isNextNum ? '✅' : '❌');
+    if (!isNextNum)
+      message.channel.send(
+        `${message.author} can't count... Restarting count 😠\n` +
+          "I'd recommend you read this: <https://www.wikihow.com/Count-to-One-Hundred>"
+      );
+  }
+
   if (message.content.toLowerCase().includes('dn')) {
     message.react('🍆');
     message.react('💦');
-    await addDeezNutsCount(message.author.id)
-    message.reply('deez nuts haha gotem\ndeez nuts count: ' + await getDeezNutsCount(message.author.id));
+    await addDeezNutsCount(message.author.id);
+    message.reply(
+      'deez nuts haha gotem\ndeez nuts count: ' +
+        (await getDeezNutsCount(message.author.id))
+    );
   }
 
   if (message.content.trim() === 'test') {
