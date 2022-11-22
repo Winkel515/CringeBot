@@ -15,12 +15,12 @@ type Commands = {
 
 const commands: Commands = {
   help,
-  leetcode,
-  pointless,
-  weather,
   roast,
-  secret,
+  leetcode,
   flex,
+  weather,
+  pointless,
+  secret,
   analysis,
   nutcount,
 };
@@ -65,7 +65,15 @@ function help(message: Message, param: string) {
     },
     { name: '!flex', value: 'Show LeetCode stats' },
     { name: '!weather', value: 'Display current weather' },
-    { name: '!pointless', value: 'idk, some pointless stuff' }
+    { name: '!pointless', value: 'idk, some pointless stuff' },
+    {
+      name: '!analysis',
+      value: 'Display top words used in the channel and their count',
+    },
+    {
+      name: 'nutcount',
+      value: 'Display how many times you have been nutted on',
+    }
   );
 
   message.channel.send({ embeds: [helpEmbed] });
