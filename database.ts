@@ -1,7 +1,7 @@
-const pg = require('pg');
-require('dotenv').config();
+import pg from 'pg';
+import 'dotenv/config';
 
-const client = new pg.Client(process.env.PG_URL);
+const client = new pg.Pool();
 
 client.connect(function (err) {
   if (err) {
