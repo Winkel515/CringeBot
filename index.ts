@@ -51,6 +51,9 @@ client.on('messageCreate', async (message) => {
     message.reply('Joe mama haha gotem');
   }
 
+  if (message.content.toLowerCase().includes('chilling')) {
+    message.reply('<:BingChilling:1044664066712551494>')
+  }
   // Winkel
   if (message.author.id === '195278304700399616') {
     message.react('<:sadge:1044403955221925889>');
