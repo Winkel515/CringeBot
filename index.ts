@@ -76,8 +76,14 @@ client.on('messageCreate', async (message) => {
     message.react('🐊');
   }
 
+  // Leena
   if (message.author.id === '248620802528903168') {
     message.react('<:bronze:1044653265452797964>');
+  }
+
+  // Patrick
+  if (message.author.id === '139469636994465792') {
+    message.react('<:patrick:1044721750451171448>');
   }
 });
 
