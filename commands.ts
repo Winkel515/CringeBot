@@ -71,7 +71,7 @@ function help(message: Message, param: string) {
       value: 'Display top words used in the channel and their count',
     },
     {
-      name: 'nutcount',
+      name: '!nutcount',
       value: 'Display how many times you have been nutted on',
     }
   );
