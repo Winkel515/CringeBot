@@ -51,20 +51,33 @@ client.on('messageCreate', async (message) => {
     message.reply('Joe mama haha gotem');
   }
 
+  // Winkel
   if (message.author.id === '195278304700399616') {
-    message.react('🐒');
+    message.react('<:sadge:1044403955221925889>');
   }
 
+  // Sam
   if (message.author.id === '294616941870710784') {
-    message.react('🤓');
+    message.react('<:copium:1044402934907146311>');
   }
 
+  // Pearl
+  if (message.author.id === '477303173581635584') {
+    message.react('<:coco:1044614713495011410>');
+  }
+
+  // Simon
   if (message.author.id === '576880753200070666') {
-    message.react('🍆');
+    message.react('<:sam:1044654789805486110>');
   }
 
+  // Ally
   if (message.author.id === '706649359600713750') {
     message.react('🐊');
+  }
+
+  if (message.author.id === '248620802528903168') {
+    message.react('<:bronze:1044653265452797964>');
   }
 });
 
