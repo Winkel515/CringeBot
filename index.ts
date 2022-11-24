@@ -28,7 +28,9 @@ client.on('messageCreate', async (message) => {
 
   useCommand(message);
 
-  countingGame(message);
+  if (message.channel.id === '1045424290859856003'){
+    countingGame(message);
+  }
 
   if (message.content.toLowerCase().includes('dn')) {
     message.react('🍆');
