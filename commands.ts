@@ -23,6 +23,7 @@ const commands: Commands = {
   secret,
   analysis,
   nutcount,
+  winkelgym,
 };
 
 function useCommand(message: Message) {
@@ -173,6 +174,20 @@ async function nutcount(message: Message, param: string) {
       'deez nuts count: ' + (await getDeezNutsCount(message.author.id))
     );
   }
+}
+
+async function winkelgym(message: Message, param: string) {
+  const start = Date.UTC(2022, 10, 28); // Nov 28 2022
+  const today = Date.now();
+
+  const dif = today - start;
+
+  const numDays = Math.floor(dif / 1000 / 60 / 60 / 24);
+  message.channel.send(
+    `It has been ${numDays} day${
+      numDays === 1 ? '' : 's'
+    } since Winkel has started going to the gym.`
+  );
 }
 
 export { useCommand };
