@@ -28,7 +28,7 @@ client.on('messageCreate', async (message) => {
 
   useCommand(message);
 
-  if (message.channel.id === '1045424290859856003'){
+  if (message.channel.id === '1045424290859856003') {
     countingGame(message);
   }
 
@@ -53,8 +53,11 @@ client.on('messageCreate', async (message) => {
     message.reply('Joe mama haha gotem');
   }
 
-  if (message.content.toLowerCase().includes('chilling')) {
-    message.reply('<:BingChilling:1044664066712551494>')
+  if (
+    message.content.toLowerCase().includes('chilling') &&
+    !message.content.toLowerCase().includes('1044664066712551494')
+  ) {
+    message.reply('<:BingChilling:1044664066712551494>');
   }
   // Winkel
   if (message.author.id === '195278304700399616') {
