@@ -3,12 +3,12 @@ import 'dotenv/config';
 
 const client = new pg.Pool();
 
-client.connect(function (err) {
-  if (err) {
-    return console.error('could not connect to postgres', err);
-  }
-  console.log('Connected to Postgres DB.');
-});
+// client.connect(function (err) {
+//   if (err) {
+//     return console.error('could not connect to postgres', err);
+//   }
+//   console.log('Connected to Postgres DB.');
+// });
 
 const addWordToDB = async (input: string) => {
   const strArr = input
@@ -51,7 +51,7 @@ const addWordToDB = async (input: string) => {
         client.query(updateQuery, updateValues);
       }
     } catch (err) {
-      console.log(err.stack);
+      console.log('Word Count Error:', err.stack);
     }
   }
 };

@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits, EmbedBuilder, Message } from 'discord.js';
+import { Client, GatewayIntentBits, Message } from 'discord.js';
 import dotenv from 'dotenv';
 import {
   addWordToDB,
