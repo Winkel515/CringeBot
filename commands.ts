@@ -150,11 +150,15 @@ async function flex(message: Message, param: string) {
       "I don't know your leetcode username bro, use !leetcode <username>"
     );
   } else {
-    const data = await getLeetcodeData(username);
-    if (!data) {
-      message.reply(`"${username}" LeetCode account does not exist`);
-    } else {
-      message.reply(data);
+    try {
+      const data = await getLeetcodeData(username);
+      if (!data) {
+        message.reply(`"${username}" LeetCode account does not exist`);
+      } else {
+        message.reply(data);
+      }
+    } catch (err) {
+      message.reply('Feature is dead until we find replacement API 💀');
     }
   }
 }
