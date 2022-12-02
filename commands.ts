@@ -36,9 +36,7 @@ function useCommand(message: Message) {
 // Utility functions
 
 const getLeetcodeData = async (username) => {
-  const res = await axios.get(
-    `https://leetcode-stats-api.herokuapp.com/${username}`
-  );
+  const res = await axios.get(`http://localhost:8080/${username}`);
   if (res.data.status === 'error') {
     return null;
   }
