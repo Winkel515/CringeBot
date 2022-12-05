@@ -43,8 +43,7 @@ const getLeetcodeData = async (username) => {
   return (
     `User: ${username}\n` +
     `Ranking: ${res.data.ranking}\n` +
-    `Total Solved: ${res.data.totalSolved}\n` +
-    `\tEasy: ${res.data.easySolved}\n` +
+    `Total Solved: ${res.data.mediumSolved + res.data.hardSolved}\n` +
     `\tMedium: ${res.data.mediumSolved}\n` +
     `\tHard: ${res.data.hardSolved}\n`
   );
