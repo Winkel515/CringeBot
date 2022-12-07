@@ -164,6 +164,32 @@ const handleCount = async (num: number): Promise<boolean> => {
   return isNextNum;
 };
 
+const addUserToBedtimeCheck = async (discordId: string): Promise<{success:boolean, alreadySet:boolean}> => {
+  let query = "SELECT * FROM users WHERE user_id = $1";
+  let values = [discordId]
+  return client
+    .query(query, values)
+    .then(res => {
+      if(res.rowCount > 0 && res.rows[0]['productivity_ping'] == true) return {success: true, alreadySet: true}; // user already present in table
+      else if(res.rowCount === 0) {
+        // have to insert user
+        query = "INSERT INTO users VALUES ($1, true)"
+        return client.query(query, values)
+          .then(res => ({success: true, alreadySet: false}))
+      }
+      else if(res.rows[0]['productivity_ping'] == false){
+        // just have to update 'productivity_ping' to true
+        query = "UPDATE users SET productivity_ping = true WHERE user_id = $1"
+        return client.query(query, values)
+          .then(res => ({success: true, alreadySet: true}))
+      }
+    })
+    .catch(err =>{
+      console.error(err.stack);
+      return {success: false, alreadySet: false};
+    })
+}
+
 export {
   addWordToDB,
   getWordCount,
@@ -173,4 +199,5 @@ export {
   addDeezNutsCount,
   getDeezNutsCount,
   handleCount,
+  addUserToBedtimeCheck,
 };

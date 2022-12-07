@@ -7,6 +7,7 @@ import {
   getRoast,
   getWordCount,
   getDeezNutsCount,
+  addUserToBedtimeCheck
 } from './database';
 
 type Commands = {
@@ -24,6 +25,7 @@ const commands: Commands = {
   analysis,
   nutcount,
   winkelgym,
+  bedtimeCheck,
 };
 
 function useCommand(message: Message) {
@@ -71,6 +73,10 @@ function help(message: Message, param: string) {
     {
       name: '!nutcount',
       value: 'Display how many times you have been nutted on',
+    },
+    {
+      name: '!bedtimeCheck',
+      value: 'Subscribes you to be pinged every night at 10pm for you to rate how productive your day was.',
     }
   );
 
@@ -189,6 +195,28 @@ async function winkelgym(message: Message, param: string) {
       numDays === 1 ? '' : 's'
     } since Winkel has started going to the gym.`
   );
+}
+
+async function bedtimeCheck (message: Message, param: string) {
+  try {
+    const res = await addUserToBedtimeCheck(message.author.id);
+    console.log(res);
+    if(!res.success){
+      message.react('❌');
+      message.reply("An error has occured. Action not completed successfully. Tell whoever coded this to git gud lmao.")
+    }
+    else if(!res.alreadySet){
+      message.react('✅');
+      message.reply("You've been successfully subscribed. You'll receive a ping every night at 10pm to ask you how you would rate your day's productivity.");
+    }
+    else {
+      message.react('✅');
+      message.reply("You're already subscribed. Wait until 10pm for your daily productivity check.")
+    }
+  } catch (err) {
+    console.log(err.stack);
+    message.react('❌');
+  }
 }
 
 export { useCommand };
