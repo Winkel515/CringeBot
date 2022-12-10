@@ -164,29 +164,41 @@ const handleCount = async (num: number): Promise<boolean> => {
   return isNextNum;
 };
 
-const addUserToBedtimeCheck = async (discordId: string): Promise<{success:boolean, alreadySet:boolean}> => {
+const addUserToBedtimeCheck = async (discordId: string): Promise<{success:boolean, isAlreadySubscribed:boolean}> => {
+  return await setUserBedtimeCheck(discordId, true);
+}
+
+const removeUserFromBedtimeCheck = async(discordId: string): Promise<{success: boolean, isAlreadySubscribed: boolean}> => {
+  return await setUserBedtimeCheck(discordId, false);
+}
+
+const setUserBedtimeCheck = async(discordId: string, subscribeUser: boolean): Promise<{success: boolean, isAlreadySubscribed: boolean}> => {
   let query = "SELECT * FROM users WHERE user_id = $1";
   let values = [discordId]
   return client
     .query(query, values)
     .then(res => {
-      if(res.rowCount > 0 && res.rows[0]['productivity_ping'] == true) return {success: true, alreadySet: true}; // user already present in table
+      if(res.rowCount > 0 && res.rows[0]['productivity_ping'] == true) return {success: true, isAlreadySubscribed: true}; // user already present in table
       else if(res.rowCount === 0) {
         // have to insert user
         query = "INSERT INTO users VALUES ($1, true)"
         return client.query(query, values)
-          .then(res => ({success: true, alreadySet: false}))
+          .then(res => ({success: true, isAlreadySubscribed: false}))
       }
       else if(res.rows[0]['productivity_ping'] == false){
-        // just have to update 'productivity_ping' to true
-        query = "UPDATE users SET productivity_ping = true WHERE user_id = $1"
-        return client.query(query, values)
-          .then(res => ({success: true, alreadySet: true}))
+        // just have to update 'productivity_ping' to true or false depending on what we need to do
+        if(subscribeUser)
+          query = "UPDATE users SET productivity_ping = true WHERE user_id = $1";
+        else
+          query = "UPDATE users SET productivity_ping = false WHERE user_id = $1";
+        
+          return client.query(query, values)
+          .then(res => ({success: true, isAlreadySubscribed: true}))
       }
     })
     .catch(err =>{
       console.error(err.stack);
-      return {success: false, alreadySet: false};
+      return {success: false, isAlreadySubscribed: false};
     })
 }
 
@@ -200,4 +212,5 @@ export {
   getDeezNutsCount,
   handleCount,
   addUserToBedtimeCheck,
+  removeUserFromBedtimeCheck
 };

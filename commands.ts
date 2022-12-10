@@ -7,7 +7,8 @@ import {
   getRoast,
   getWordCount,
   getDeezNutsCount,
-  addUserToBedtimeCheck
+  addUserToBedtimeCheck,
+  removeUserFromBedtimeCheck
 } from './database';
 
 type Commands = {
@@ -197,26 +198,47 @@ async function winkelgym(message: Message, param: string) {
   );
 }
 
+async function listenForConfirmation(message: Message): Promise<boolean> {
+  const filter = (reaction, user) => {
+    return ['👍', '👎'].includes(reaction.emoji.name) && user.id === message.author.id;
+  };
+  
+  return message.awaitReactions({ filter, max: 1, time: 60000, errors: ['time'] })
+    .then(collected => {
+      const reaction = collected.first();
+      return reaction.emoji.name === '👍';
+    });
+}
+
 async function bedtimeCheck (message: Message, param: string) {
   try {
-    const res = await addUserToBedtimeCheck(message.author.id);
+    let res = await addUserToBedtimeCheck(message.author.id);
     console.log(res);
     if(!res.success){
       message.react('❌');
       message.reply("An error has occured. Action not completed successfully. Tell whoever coded this to git gud lmao.")
     }
-    else if(!res.alreadySet){
+    else if(!res.isAlreadySubscribed){
       message.react('✅');
       message.reply("You've been successfully subscribed. You'll receive a ping every night at 10pm to ask you how you would rate your day's productivity.");
     }
     else {
-      message.react('✅');
-      message.reply("You're already subscribed. Wait until 10pm for your daily productivity check.")
+      message.react('👍').then(() => message.react('👎'));
+      message.reply("You're already subscribed. Do you want to unsubscribe? Please react to this message with a 👍 if you want to unsubscribe.")
+      const confirmation = await listenForConfirmation(message);
+      if(confirmation){
+        res = await removeUserFromBedtimeCheck(message.author.id);
+        // reformat completely the backend lmao, I fucked up the response. also this removeUser function isnt supposed to add the user if he's not already present :skull:
+        message.react('✅');
+        message.reply("You've been successfully unsubscribed. To subscribe again, simply redo the command.");
+      }
     }
   } catch (err) {
     console.log(err.stack);
     message.react('❌');
   }
 }
+
+
 
 export { useCommand };
