@@ -7,7 +7,7 @@ import {
   getRoast,
   getWordCount,
   getDeezNutsCount,
-  addUserToBedtimeCheck
+  addUserToBedtimeCheck,
 } from './database';
 
 type Commands = {
@@ -44,8 +44,12 @@ const getLeetcodeData = async (username) => {
   }
   return (
     `User: ${username}\n` +
-    `Ranking: ${res.data.ranking}\n` +
-    `Total Solved: ${res.data.easySolved + res.data.mediumSolved + res.data.hardSolved}\n` +
+    `Points: ${
+      res.data.easySolved + 2 * res.data.mediumSolved + 3 * res.data.hardSolved
+    }\n` +
+    `Total Solved: ${
+      res.data.easySolved + res.data.mediumSolved + res.data.hardSolved
+    }\n` +
     `\tEasy: ${res.data.easySolved}\n` +
     `\tMedium: ${res.data.mediumSolved}\n` +
     `\tHard: ${res.data.hardSolved}\n`
@@ -77,7 +81,8 @@ function help(message: Message, param: string) {
     },
     {
       name: '!bedtimeCheck',
-      value: 'Subscribes you to be pinged every night at 10pm for you to rate how productive your day was.',
+      value:
+        'Subscribes you to be pinged every night at 10pm for you to rate how productive your day was.',
     }
   );
 
@@ -198,21 +203,25 @@ async function winkelgym(message: Message, param: string) {
   );
 }
 
-async function bedtimeCheck (message: Message, param: string) {
+async function bedtimeCheck(message: Message, param: string) {
   try {
     const res = await addUserToBedtimeCheck(message.author.id);
     console.log(res);
-    if(!res.success){
+    if (!res.success) {
       message.react('❌');
-      message.reply("An error has occured. Action not completed successfully. Tell whoever coded this to git gud lmao.")
-    }
-    else if(!res.alreadySet){
+      message.reply(
+        'An error has occured. Action not completed successfully. Tell whoever coded this to git gud lmao.'
+      );
+    } else if (!res.alreadySet) {
       message.react('✅');
-      message.reply("You've been successfully subscribed. You'll receive a ping every night at 10pm to ask you how you would rate your day's productivity.");
-    }
-    else {
+      message.reply(
+        "You've been successfully subscribed. You'll receive a ping every night at 10pm to ask you how you would rate your day's productivity."
+      );
+    } else {
       message.react('✅');
-      message.reply("You're already subscribed. Wait until 10pm for your daily productivity check.")
+      message.reply(
+        "You're already subscribed. Wait until 10pm for your daily productivity check."
+      );
     }
   } catch (err) {
     console.log(err.stack);
