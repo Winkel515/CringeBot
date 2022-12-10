@@ -142,12 +142,12 @@ const addDeezNutsCount = async (discordId: string) => {
       const insertQuery =
         'INSERT INTO dn_counts (discord_id, count) VALUES ($1, $2)';
       const insertValues = [discordId, 1];
-      client.query(insertQuery, insertValues);
+      await client.query(insertQuery, insertValues);
     } else {
       const updateQuery =
         'UPDATE dn_counts SET count = $2 WHERE discord_id = $1';
       const updateValues = [discordId, parseInt(res.rows[0].count) + 1];
-      client.query(updateQuery, updateValues);
+      await client.query(updateQuery, updateValues);
     }
   } catch (err) {
     console.log(err.stack);
