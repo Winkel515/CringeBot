@@ -25,6 +25,7 @@ const commands: Commands = {
   analysis,
   nutcount,
   winkelgym,
+  leenagym,
   bedtimeCheck,
 };
 
@@ -200,6 +201,20 @@ async function winkelgym(message: Message, param: string) {
     `It has been ${numDays} day${
       numDays === 1 ? '' : 's'
     } since Winkel has started going to the gym.`
+  );
+}
+
+async function leenagym(message: Message, param: string) {
+  const start = Date.UTC(2022, 11, 12); // Dev 12 2022
+  const today = Date.now();
+
+  const dif = today - start;
+
+  const numDays = Math.floor(dif / 1000 / 60 / 60 / 24);
+  message.channel.send(
+    `It has been ${numDays} day${
+      numDays === 1 ? '' : 's'
+    } since Leena has started going to the gym.`
   );
 }
 
