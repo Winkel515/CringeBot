@@ -1,5 +1,9 @@
 import { EmbedBuilder, Message, MessageMentions } from 'discord.js';
 import axios from 'axios';
+import * as deepl from 'deepl-node';
+import py from 'tiny-pinyin';
+
+const translator = new deepl.Translator(process.env.DEEPL_KEY);
 
 import {
   addLeetcodeUser,
@@ -27,6 +31,8 @@ const commands: Commands = {
   winkelgym,
   leenagym,
   bedtimeCheck,
+  translate,
+  pinyin,
 };
 
 function useCommand(message: Message) {
@@ -242,6 +248,41 @@ async function bedtimeCheck(message: Message, param: string) {
     console.log(err.stack);
     message.react('❌');
   }
+}
+
+async function translate(message: Message, param: string) {
+  if (!message.reference) {
+    message.reply('You need to reply to the message you want to translate');
+    return;
+  }
+  const toTranslate = (
+    await message.channel.messages.fetch(message.reference.messageId)
+  ).content;
+
+  if (!toTranslate.match(/[\u3400-\u9FBF]/)) {
+    message.reply('The message must be in Chinese');
+    return;
+  }
+  const output = (await translator.translateText(toTranslate, 'zh', 'en-US'))
+    .text;
+  message.channel.send(output);
+}
+
+async function pinyin(message: Message, param: string) {
+  if (!message.reference) {
+    message.reply('You need to reply to the message you want to translate');
+    return;
+  }
+  const toPinyin = (
+    await message.channel.messages.fetch(message.reference.messageId)
+  ).content;
+
+  if (!toPinyin.match(/[\u3400-\u9FBF]/)) {
+    message.reply('The message must be in Chinese');
+    return;
+  }
+
+  message.channel.send(py.convertToPinyin(toPinyin, ' ', true));
 }
 
 export { useCommand };
