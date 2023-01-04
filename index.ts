@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits, Message } from 'discord.js';
+import { Client, GatewayIntentBits, Message, TextChannel } from 'discord.js';
 import dotenv from 'dotenv';
 import {
   addWordToDB,
@@ -7,6 +7,7 @@ import {
   handleCount,
 } from './database';
 import { useCommand } from './commands';
+import cron from 'node-cron';
 
 dotenv.config();
 
@@ -19,7 +20,42 @@ const client = new Client({
   ],
 });
 
-client.once('ready', () => console.log('CringeBot is ready!'));
+client.once('ready', () => {
+  const gymChannel = <TextChannel>(
+    client.channels.cache.get('1047194613754110042')
+  );
+
+  cron.schedule(
+    '0 0 18 1 * *',
+    async () => {
+      const message = await gymChannel.send(
+        '<@248620802528903168>, you have completed another month at the gym!'
+      );
+      message.react('<:SamFlemessageLeft:1049745354180022272>');
+      message.react('<:leena:1045072832784248944>');
+      message.react('<:SamFlexRight:1050105851676995624>');
+    },
+    {
+      scheduled: true,
+      timezone: 'America/Toronto',
+    }
+  );
+
+  cron.schedule(
+    '0 0 18 5 1 *',
+    async () => {
+      gymChannel.send(
+        'Paranoia check. This message should been sent on Jan 5th at 6:00PM'
+      );
+    },
+    {
+      scheduled: true,
+      timezone: 'America/Toronto',
+    }
+  );
+
+  console.log('CringeBot is ready!');
+});
 
 client.on('messageCreate', async (message) => {
   if (message.author.bot) return;
@@ -59,6 +95,7 @@ client.on('messageCreate', async (message) => {
   ) {
     message.reply('<:BingChilling:1044664066712551494>');
   }
+
   // Winkel
   if (message.author.id === '195278304700399616') {
     message.react('<:sadge:1044403955221925889>');
