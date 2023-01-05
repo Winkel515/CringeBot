@@ -21,38 +21,38 @@ const client = new Client({
 });
 
 client.once('ready', () => {
-  const gymChannel = <TextChannel>(
-    client.channels.cache.get('1047194613754110042')
-  );
+  // const gymChannel = <TextChannel>(
+  //   client.channels.cache.get('1047194613754110042')
+  // );
 
-  cron.schedule(
-    '0 0 18 1 * *',
-    async () => {
-      const message = await gymChannel.send(
-        '<@248620802528903168>, you have completed another month at the gym!'
-      );
-      message.react('<:SamFlemessageLeft:1049745354180022272>');
-      message.react('<:leena:1045072832784248944>');
-      message.react('<:SamFlexRight:1050105851676995624>');
-    },
-    {
-      scheduled: true,
-      timezone: 'America/Toronto',
-    }
-  );
+  // cron.schedule(
+  //   '0 0 18 1 * *',
+  //   async () => {
+  //     const message = await gymChannel.send(
+  //       '<@248620802528903168>, you have completed another month at the gym!'
+  //     );
+  //     message.react('<:SamFlemessageLeft:1049745354180022272>');
+  //     message.react('<:leena:1045072832784248944>');
+  //     message.react('<:SamFlexRight:1050105851676995624>');
+  //   },
+  //   {
+  //     scheduled: true,
+  //     timezone: 'America/Toronto',
+  //   }
+  // );
 
-  cron.schedule(
-    '0 0 18 5 1 *',
-    async () => {
-      gymChannel.send(
-        'Paranoia check. This message should been sent on Jan 5th at 6:00PM'
-      );
-    },
-    {
-      scheduled: true,
-      timezone: 'America/Toronto',
-    }
-  );
+  // cron.schedule(
+  //   '0 0 18 5 1 *',
+  //   async () => {
+  //     gymChannel.send(
+  //       'Paranoia check. This message should been sent on Jan 5th at 6:00PM'
+  //     );
+  //   },
+  //   {
+  //     scheduled: true,
+  //     timezone: 'America/Toronto',
+  //   }
+  // );
 
   console.log('CringeBot is ready!');
 });
