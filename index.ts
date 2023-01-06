@@ -21,9 +21,10 @@ const client = new Client({
 });
 
 client.once('ready', () => {
-  // const gymChannel = <TextChannel>(
-  //   client.channels.cache.get('1047194613754110042')
-  // );
+  const gymChannel = <TextChannel>(
+    // client.channels.cache.get('1047194613754110042') // gym
+    client.channels.cache.get('1042444139159109753') // test
+  );
 
   // cron.schedule(
   //   '0 0 18 1 * *',
@@ -41,18 +42,9 @@ client.once('ready', () => {
   //   }
   // );
 
-  // cron.schedule(
-  //   '0 0 18 5 1 *',
-  //   async () => {
-  //     gymChannel.send(
-  //       'Paranoia check. This message should been sent on Jan 5th at 6:00PM'
-  //     );
-  //   },
-  //   {
-  //     scheduled: true,
-  //     timezone: 'America/Toronto',
-  //   }
-  // );
+  cron.schedule('*/5 * 1 * * *', async () => {
+    gymChannel.send('Testing from server');
+  });
 
   console.log('CringeBot is ready!');
 });
