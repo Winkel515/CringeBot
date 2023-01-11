@@ -56,10 +56,6 @@ client.on('messageCreate', async (message) => {
     message.react('🍆');
     message.react('💦');
     await addDeezNutsCount(message.author.id);
-    message.reply(
-      'deez nuts haha gotem\ndeez nuts count: ' +
-        (await getDeezNutsCount(message.author.id))
-    );
   }
 
   if (message.content.trim() === 'test') {
