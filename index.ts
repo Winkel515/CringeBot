@@ -38,6 +38,15 @@ client.once('ready', () => {
     gymChannel.send('This message should have been sent on Jan 6th at 6PM EST');
   });
 
+  cron.schedule('0 30 11 * * 1', async () =>{
+    const message = await gymChannel.send(
+      "<@195278304700399616>, GYM PIC OR NO BIG MAC."
+    );
+    message.react('🍔');
+    message.react('🍟');
+    message.react('🥤');
+  });
+
   console.log('CringeBot is ready!');
 });
 
