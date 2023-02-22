@@ -38,9 +38,9 @@ client.once('ready', () => {
     gymChannel.send('This message should have been sent on Jan 6th at 6PM EST');
   });
 
-  cron.schedule('0 30 11 * * 1', async () =>{
+  cron.schedule('0 30 11 * * 1', async () => {
     const message = await gymChannel.send(
-      "<@195278304700399616>, GYM PIC OR NO BIG MAC."
+      '<@195278304700399616>, GYM PIC OR NO BIG MAC.'
     );
     message.react('🍔');
     message.react('🍟');
@@ -118,6 +118,11 @@ client.on('messageCreate', async (message) => {
   // Patrick
   if (message.author.id === '139469636994465792') {
     message.react('<:patrick:1044721750451171448>');
+  }
+
+  // Jeff
+  if (message.author.id === '82195381156315136') {
+    message.react('<:furball:1077599037286527106>');
   }
 });
 
