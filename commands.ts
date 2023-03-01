@@ -2,6 +2,7 @@ import { EmbedBuilder, Message, MessageMentions, SystemChannelFlagsBitField } fr
 import axios from 'axios';
 import * as deepl from 'deepl-node';
 import py from 'tiny-pinyin';
+import nodeHtmlToImage from 'node-html-to-image';
 
 const translator = new deepl.Translator(process.env.DEEPL_KEY);
 
@@ -46,21 +47,71 @@ function useCommand(message: Message) {
 
 const getLeetcodeData = async (username) => {
   const res = await axios.get(`http://localhost:8080/${username}`);
+
+  // For local testing
+  // const res = {
+  //   data: {
+  //     easySolved: 169,
+  //     mediumSolved: 269,
+  //     hardSolved: 369,
+  //     status: 'ok',
+  //   },
+  // };
   if (res.data.status === 'error') {
     return null;
   }
-  return (
-    `User: ${username}\n` +
-    `Points: ${
-      res.data.easySolved + 2 * res.data.mediumSolved + 3 * res.data.hardSolved
-    }\n` +
-    `Total Solved: ${
-      res.data.easySolved + res.data.mediumSolved + res.data.hardSolved
-    }\n` +
-    `\tEasy: ${res.data.easySolved}\n` +
-    `\tMedium: ${res.data.mediumSolved}\n` +
-    `\tHard: ${res.data.hardSolved}\n`
-  );
+
+  const image = (await nodeHtmlToImage({
+    html: `
+    <html>
+      <head>
+        <style>
+          .easy {
+            color: #4bffea;
+          }
+          .medium {
+            color: #ffc52f;
+          }
+          .hard {
+            color: #ff4066;
+          }
+          body {
+            width: 150px;
+            height: 100px;
+            background-color: #1e2122;
+            color: #a6adb5;
+          }
+          .dif {
+            display: flex;
+            justify-content: space-between;
+          }
+          .difs {
+            width: 100px;
+          }
+          .center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="center">
+          <div class="difs">
+            <div class="dif"><span class="easy">Easy</span>{{res.data.easySolved}}</div>
+            <div class="dif"><span class="medium">Medium</span>{{res.data.mediumSolved}}</div>
+            <div class="dif"><span class="hard">Hard</span>{{res.data.hardSolved}}</div>
+          </div>
+        </div>
+      </body>
+    </html>
+  `,
+    content: { res },
+  })) as Buffer;
+
+  return image;
 };
 
 // Command function
@@ -183,9 +234,16 @@ async function flex(message: Message, param: string) {
       if (!data) {
         message.reply(`"${username}" LeetCode account does not exist`);
       } else {
-        message.reply(data);
+        message.reply({
+          files: [
+            {
+              attachment: data,
+            },
+          ],
+        });
       }
     } catch (err) {
+      console.log(err);
       message.reply('Feature is dead until we find replacement API 💀');
     }
   }

@@ -1,11 +1,6 @@
 import { Client, GatewayIntentBits, Message, TextChannel } from 'discord.js';
 import dotenv from 'dotenv';
-import {
-  addWordToDB,
-  addDeezNutsCount,
-  getDeezNutsCount,
-  handleCount,
-} from './database';
+import { addWordToDB, addDeezNutsCount, handleCount } from './database';
 import { useCommand } from './commands';
 import cron from 'node-cron';
 
