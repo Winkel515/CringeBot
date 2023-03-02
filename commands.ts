@@ -1,4 +1,9 @@
-import { EmbedBuilder, Message, MessageMentions, SystemChannelFlagsBitField } from 'discord.js';
+import {
+  EmbedBuilder,
+  Message,
+  MessageMentions,
+  SystemChannelFlagsBitField,
+} from 'discord.js';
 import axios from 'axios';
 import * as deepl from 'deepl-node';
 import py from 'tiny-pinyin';
@@ -46,17 +51,17 @@ function useCommand(message: Message) {
 // Utility functions
 
 const getLeetcodeData = async (username) => {
-  const res = await axios.get(`http://localhost:8080/${username}`);
-
-  // For local testing
-  // const res = {
-  //   data: {
-  //     easySolved: 169,
-  //     mediumSolved: 269,
-  //     hardSolved: 369,
-  //     status: 'ok',
-  //   },
-  // };
+  const res =
+    process.env.ENVIRONMENT === 'development'
+      ? {
+          data: {
+            easySolved: 169,
+            mediumSolved: 269,
+            hardSolved: 369,
+            status: 'ok',
+          },
+        }
+      : await axios.get(`http://localhost:8080/${username}`);
   if (res.data.status === 'error') {
     return null;
   }
@@ -188,15 +193,19 @@ async function weather(message: Message, param: string) {
     const windSpeed = weatherData.data.wind.speed;
     const iconQuery = weatherData.data.weather[0].icon;
 
-    const weatherEmbed = new EmbedBuilder().setTitle(`Weather in ${nameOfCity}`);
-    weatherEmbed.setColor(0xFFFFFF)
-    weatherEmbed.setThumbnail(`http://openweathermap.org/img/wn/${iconQuery}@2x.png`)
+    const weatherEmbed = new EmbedBuilder().setTitle(
+      `Weather in ${nameOfCity}`
+    );
+    weatherEmbed.setColor(0xffffff);
+    weatherEmbed.setThumbnail(
+      `http://openweathermap.org/img/wn/${iconQuery}@2x.png`
+    );
     weatherEmbed.setDescription(weatherStatus);
     weatherEmbed.addFields(
-      {name: "Temperature", value: currentTemp.toString(),inline: true},
-      {name: "Wind Speed", value:windSpeed.toString(), inline: true}
-    )
-    message.reply ({ embeds: [weatherEmbed] })
+      { name: 'Temperature', value: currentTemp.toString(), inline: true },
+      { name: 'Wind Speed', value: windSpeed.toString(), inline: true }
+    );
+    message.reply({ embeds: [weatherEmbed] });
   } catch (err) {
     message.reply('write the city name correctly');
   }
@@ -230,11 +239,12 @@ async function flex(message: Message, param: string) {
     );
   } else {
     try {
+      message.channel.sendTyping();
       const data = await getLeetcodeData(username);
       if (!data) {
         message.reply(`"${username}" LeetCode account does not exist`);
       } else {
-        message.reply({
+        await message.reply({
           files: [
             {
               attachment: data,
