@@ -46,18 +46,18 @@ function useCommand(message: Message) {
 // Utility functions
 
 const getLeetcodeData = async (username) => {
-  // const res = await axios.get(`http://localhost:8080/${username}`);
+  const res = await axios.get(`http://localhost:8080/${username}`);
 
   // For local testing
-  const res = {
-    data: {
-      easySolved: 169,
-      mediumSolved: 269,
-      hardSolved: 369,
-      totalSolved: 169 + 269 + 369,
-      status: 'ok',
-    },
-  };
+  // const res = {
+  //   data: {
+  //     easySolved: 169,
+  //     mediumSolved: 269,
+  //     hardSolved: 369,
+  //     totalSolved: 169 + 269 + 369,
+  //     status: 'ok',
+  //   },
+  // };
   if (res.data.status === 'error') {
     return null;
   }
