@@ -1,9 +1,4 @@
-import {
-  EmbedBuilder,
-  Message,
-  MessageMentions,
-  SystemChannelFlagsBitField,
-} from 'discord.js';
+import { EmbedBuilder, Message, MessageMentions } from 'discord.js';
 import axios from 'axios';
 import * as deepl from 'deepl-node';
 import py from 'tiny-pinyin';
@@ -51,17 +46,18 @@ function useCommand(message: Message) {
 // Utility functions
 
 const getLeetcodeData = async (username) => {
-  const res =
-    process.env.ENVIRONMENT === 'development'
-      ? {
-          data: {
-            easySolved: 169,
-            mediumSolved: 269,
-            hardSolved: 369,
-            status: 'ok',
-          },
-        }
-      : await axios.get(`http://localhost:8080/${username}`);
+  // const res = await axios.get(`http://localhost:8080/${username}`);
+
+  // For local testing
+  const res = {
+    data: {
+      easySolved: 169,
+      mediumSolved: 269,
+      hardSolved: 369,
+      totalSolved: 169 + 269 + 369,
+      status: 'ok',
+    },
+  };
   if (res.data.status === 'error') {
     return null;
   }
@@ -71,6 +67,9 @@ const getLeetcodeData = async (username) => {
     <html>
       <head>
         <style>
+          .text {
+            color: #e8e6e3;
+          }
           .easy {
             color: #4bffea;
           }
@@ -81,8 +80,8 @@ const getLeetcodeData = async (username) => {
             color: #ff4066;
           }
           body {
-            width: 150px;
-            height: 100px;
+            width: 165px;
+            height: 140px;
             background-color: #1e2122;
             color: #a6adb5;
           }
@@ -91,7 +90,7 @@ const getLeetcodeData = async (username) => {
             justify-content: space-between;
           }
           .difs {
-            width: 100px;
+            width: 130px;
           }
           .center {
             display: flex;
@@ -100,20 +99,37 @@ const getLeetcodeData = async (username) => {
             width: 100%;
             height: 100%;
           }
+          .name {
+            font-size: 20px;
+            width: 100%;
+            display: flex;
+            padding-bottom: 10px;
+            justify-content: center;
+          }
         </style>
       </head>
       <body>
         <div class="center">
           <div class="difs">
-            <div class="dif"><span class="easy">Easy</span>{{res.data.easySolved}}</div>
-            <div class="dif"><span class="medium">Medium</span>{{res.data.mediumSolved}}</div>
-            <div class="dif"><span class="hard">Hard</span>{{res.data.hardSolved}}</div>
+            <div class="name">{{username}}</div>
+            <div class="dif">
+              <span class="text">Total</span>{{res.data.totalSolved}}
+            </div>
+            <div class="dif">
+              <span class="easy">Easy</span>{{res.data.easySolved}}
+            </div>
+            <div class="dif">
+              <span class="medium">Medium</span>{{res.data.mediumSolved}}
+            </div>
+            <div class="dif">
+              <span class="hard">Hard</span>{{res.data.hardSolved}}
+            </div>
           </div>
         </div>
       </body>
     </html>
   `,
-    content: { res },
+    content: { res, username },
   })) as Buffer;
 
   return image;
@@ -189,23 +205,7 @@ async function weather(message: Message, param: string) {
     );
     const currentTemp = weatherData.data.main.temp;
     const nameOfCity = weatherData.data.name;
-    const weatherStatus = weatherData.data.weather[0].description;
-    const windSpeed = weatherData.data.wind.speed;
-    const iconQuery = weatherData.data.weather[0].icon;
-
-    const weatherEmbed = new EmbedBuilder().setTitle(
-      `Weather in ${nameOfCity}`
-    );
-    weatherEmbed.setColor(0xffffff);
-    weatherEmbed.setThumbnail(
-      `http://openweathermap.org/img/wn/${iconQuery}@2x.png`
-    );
-    weatherEmbed.setDescription(weatherStatus);
-    weatherEmbed.addFields(
-      { name: 'Temperature', value: currentTemp.toString(), inline: true },
-      { name: 'Wind Speed', value: windSpeed.toString(), inline: true }
-    );
-    message.reply({ embeds: [weatherEmbed] });
+    message.reply(`It is currently ${currentTemp} \u00B0C in ${nameOfCity}`);
   } catch (err) {
     message.reply('write the city name correctly');
   }
@@ -239,12 +239,11 @@ async function flex(message: Message, param: string) {
     );
   } else {
     try {
-      message.channel.sendTyping();
       const data = await getLeetcodeData(username);
       if (!data) {
         message.reply(`"${username}" LeetCode account does not exist`);
       } else {
-        await message.reply({
+        message.reply({
           files: [
             {
               attachment: data,
