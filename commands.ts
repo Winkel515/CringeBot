@@ -45,94 +45,34 @@ function useCommand(message: Message) {
 
 // Utility functions
 
-const getLeetcodeData = async (username) => {
-  const res = await axios.get(`http://localhost:8080/${username}`);
-
-  // For local testing
-  // const res = {
-  //   data: {
-  //     easySolved: 169,
-  //     mediumSolved: 269,
-  //     hardSolved: 369,
-  //     totalSolved: 169 + 269 + 369,
-  //     status: 'ok',
-  //   },
-  // };
+const getLeetcodeData = async (username): Promise<string> => {
+  const res =
+    process.env.ENVIRONMENT === 'development'
+      ? {
+          data: {
+            easySolved: 169,
+            mediumSolved: 269,
+            hardSolved: 369,
+            status: 'ok',
+          },
+        }
+      : await axios.get(`http://localhost:8080/${username}`);
   if (res.data.status === 'error') {
     return null;
   }
 
-  const image = (await nodeHtmlToImage({
-    html: `
-    <html>
-      <head>
-        <style>
-          .text {
-            color: #e8e6e3;
-          }
-          .easy {
-            color: #4bffea;
-          }
-          .medium {
-            color: #ffc52f;
-          }
-          .hard {
-            color: #ff4066;
-          }
-          body {
-            width: 165px;
-            height: 140px;
-            background-color: #1e2122;
-            color: #a6adb5;
-          }
-          .dif {
-            display: flex;
-            justify-content: space-between;
-          }
-          .difs {
-            width: 130px;
-          }
-          .center {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            height: 100%;
-          }
-          .name {
-            font-size: 20px;
-            width: 100%;
-            display: flex;
-            padding-bottom: 10px;
-            justify-content: center;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="center">
-          <div class="difs">
-            <div class="name">{{username}}</div>
-            <div class="dif">
-              <span class="text">Total</span>{{res.data.totalSolved}}
-            </div>
-            <div class="dif">
-              <span class="easy">Easy</span>{{res.data.easySolved}}
-            </div>
-            <div class="dif">
-              <span class="medium">Medium</span>{{res.data.mediumSolved}}
-            </div>
-            <div class="dif">
-              <span class="hard">Hard</span>{{res.data.hardSolved}}
-            </div>
-          </div>
-        </div>
-      </body>
-    </html>
-  `,
-    content: { res, username },
-  })) as Buffer;
-
-  return image;
+  return (
+    `User: ${username}\n` +
+    `Points: ${
+      res.data.easySolved + 2 * res.data.mediumSolved + 3 * res.data.hardSolved
+    }\n` +
+    `Total Solved: ${
+      res.data.easySolved + res.data.mediumSolved + res.data.hardSolved
+    }\n` +
+    `\tEasy: ${res.data.easySolved}\n` +
+    `\tMedium: ${res.data.mediumSolved}\n` +
+    `\tHard: ${res.data.hardSolved}\n`
+  );
 };
 
 // Command function
@@ -243,13 +183,7 @@ async function flex(message: Message, param: string) {
       if (!data) {
         message.reply(`"${username}" LeetCode account does not exist`);
       } else {
-        message.reply({
-          files: [
-            {
-              attachment: data,
-            },
-          ],
-        });
+        await message.reply(data);
       }
     } catch (err) {
       console.log(err);
