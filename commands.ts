@@ -1,9 +1,4 @@
-import {
-  EmbedBuilder,
-  Message,
-  MessageMentions,
-  SystemChannelFlagsBitField,
-} from 'discord.js';
+import { EmbedBuilder, Message, MessageMentions } from 'discord.js';
 import axios from 'axios';
 import * as deepl from 'deepl-node';
 import py from 'tiny-pinyin';
@@ -150,23 +145,7 @@ async function weather(message: Message, param: string) {
     );
     const currentTemp = weatherData.data.main.temp;
     const nameOfCity = weatherData.data.name;
-    const weatherStatus = weatherData.data.weather[0].description;
-    const windSpeed = weatherData.data.wind.speed;
-    const iconQuery = weatherData.data.weather[0].icon;
-
-    const weatherEmbed = new EmbedBuilder().setTitle(
-      `Weather in ${nameOfCity}`
-    );
-    weatherEmbed.setColor(0xffffff);
-    weatherEmbed.setThumbnail(
-      `http://openweathermap.org/img/wn/${iconQuery}@2x.png`
-    );
-    weatherEmbed.setDescription(weatherStatus);
-    weatherEmbed.addFields(
-      { name: 'Temperature', value: currentTemp.toString(), inline: true },
-      { name: 'Wind Speed', value: windSpeed.toString(), inline: true }
-    );
-    message.reply({ embeds: [weatherEmbed] });
+    message.reply(`It is currently ${currentTemp} \u00B0C in ${nameOfCity}`);
   } catch (err) {
     message.reply('write the city name correctly');
   }
@@ -200,7 +179,6 @@ async function flex(message: Message, param: string) {
     );
   } else {
     try {
-      message.channel.sendTyping();
       const data = await getLeetcodeData(username);
       if (!data) {
         message.reply(`"${username}" LeetCode account does not exist`);
