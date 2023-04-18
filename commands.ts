@@ -50,7 +50,7 @@ function useCommand(message: Message) {
 
 // Utility functions
 
-const getLeetcodeData = async (username) => {
+const getLeetcodeData = async (username): Promise<string> => {
   const res =
     process.env.ENVIRONMENT === 'development'
       ? {
@@ -66,57 +66,18 @@ const getLeetcodeData = async (username) => {
     return null;
   }
 
-  const image = (await nodeHtmlToImage({
-    html: `
-    <html>
-      <head>
-        <style>
-          .easy {
-            color: #4bffea;
-          }
-          .medium {
-            color: #ffc52f;
-          }
-          .hard {
-            color: #ff4066;
-          }
-          body {
-            width: 150px;
-            height: 100px;
-            background-color: #1e2122;
-            color: #a6adb5;
-          }
-          .dif {
-            display: flex;
-            justify-content: space-between;
-          }
-          .difs {
-            width: 100px;
-          }
-          .center {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            height: 100%;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="center">
-          <div class="difs">
-            <div class="dif"><span class="easy">Easy</span>{{res.data.easySolved}}</div>
-            <div class="dif"><span class="medium">Medium</span>{{res.data.mediumSolved}}</div>
-            <div class="dif"><span class="hard">Hard</span>{{res.data.hardSolved}}</div>
-          </div>
-        </div>
-      </body>
-    </html>
-  `,
-    content: { res },
-  })) as Buffer;
-
-  return image;
+  return (
+    `User: ${username}\n` +
+    `Points: ${
+      res.data.easySolved + 2 * res.data.mediumSolved + 3 * res.data.hardSolved
+    }\n` +
+    `Total Solved: ${
+      res.data.easySolved + res.data.mediumSolved + res.data.hardSolved
+    }\n` +
+    `\tEasy: ${res.data.easySolved}\n` +
+    `\tMedium: ${res.data.mediumSolved}\n` +
+    `\tHard: ${res.data.hardSolved}\n`
+  );
 };
 
 // Command function
@@ -244,13 +205,7 @@ async function flex(message: Message, param: string) {
       if (!data) {
         message.reply(`"${username}" LeetCode account does not exist`);
       } else {
-        await message.reply({
-          files: [
-            {
-              attachment: data,
-            },
-          ],
-        });
+        await message.reply(data);
       }
     } catch (err) {
       console.log(err);
